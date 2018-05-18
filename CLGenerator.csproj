@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProjectGuid>{34C74822-2EC4-4F04-9E93-DAFBFAC84DDE}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>CLGenerator</RootNamespace>
+    <AssemblyName>CLGenerator</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ExternalConsole>true</ExternalConsole>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ExternalConsole>true</ExternalConsole>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="itextsharp">
+      <HintPath>..\packages\iTextSharp.5.5.13\lib\itextsharp.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="MD\MdPiece.cs" />
+    <Compile Include="MD\MdCoordinates.cs" />
+    <Compile Include="MD\MdPoint.cs" />
+    <Compile Include="MD\MdDimension.cs" />
+    <Compile Include="MD\MdBoard.cs" />
+    <Compile Include="BD\IBuilder.cs" />
+    <Compile Include="BD\Operator.cs" />
+    <Compile Include="MD\MdList.cs" />
+    <Compile Include="ST\IStDimOrder.cs" />
+    <Compile Include="ST\IStrategy.cs" />
+    <Compile Include="ST\IAlignStrategy.cs" />
+    <Compile Include="MD\MdMetric.cs" />
+    <Compile Include="Reader.cs" />
+    <Compile Include="ST\IPointOrderStrategy.cs" />
+    <Compile Include="ST\IStDimOrientationStrategy.cs" />
+    <Compile Include="FC\IFactory.cs" />
+    <Compile Include="MD\MdLine.cs" />
+    <Compile Include="MD\MdSection.cs" />
+    <Compile Include="MD\MdMatrix.cs" />
+    <Compile Include="StaticHelpers.cs" />
+    <Compile Include="Constants.cs" />
+    <Compile Include="MD\MdShapeWriter.cs" />
+    <Compile Include="ST\IDcDimRestriction.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="MD\" />
+    <Folder Include="BD\" />
+    <Folder Include="ST\" />
+    <Folder Include="FC\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CutList.sln" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+</Project>
