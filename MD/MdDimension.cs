@@ -1,6 +1,9 @@
 ﻿using System;
 namespace CLGenerator.MD
 {
+    /// <summary>
+    /// Represents any area of space with a seperate height and width
+    /// </summary>
     public class MdDimension : MdMetric
     {
         public double Width { get; private set; }
@@ -33,7 +36,10 @@ namespace CLGenerator.MD
             return Width * Height;
         }
 
-
+        /// <summary>
+        /// Returns a <see cref="T:System.String"/> that represents the current <see cref="T:CLGenerator.MD.MdDimension"/>.
+        /// </summary>
+        /// <returns>A <see cref="T:System.String"/> that represents the current <see cref="T:CLGenerator.MD.MdDimension"/>.</returns>
         public override string ToString()
         {
             return Width + "x" + Height;

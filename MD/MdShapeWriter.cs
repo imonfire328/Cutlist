@@ -10,6 +10,13 @@ namespace CLGenerator.MD
         {
         }
 
+        /// <summary>
+        /// Returns a list of dimensions with zoom applied
+        /// </summary>
+        /// <returns>The proportions.</returns>
+        /// <param name="point">Point.</param>
+        /// <param name="dim">Dim.</param>
+        /// <param name="zoom">Zoom.</param>
         public double[] Proportions(MdPoint point, MdDimension dim, int zoom = 1)
         {
             return new double[]
@@ -22,6 +29,9 @@ namespace CLGenerator.MD
         }
     }
 
+    /// <summary>
+    /// Draws a rectangle to the given PdfContentByte
+    /// </summary>
     public class MdRectangleWriter
     {
         public PdfContentByte DrawRectangle(PdfContentByte cb, double[] proportions){

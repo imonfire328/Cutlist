@@ -6,6 +6,9 @@ using iTextSharp.text.pdf;
 
 namespace CLGenerator.MD
 {
+    /// <summary>
+    /// Represents an area of space occupied on a board
+    /// </summary>
     public class MdPiece 
     {
         public int Id { get; private set; }

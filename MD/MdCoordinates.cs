@@ -14,7 +14,11 @@ namespace CLGenerator.MD
             Corners = new MdPoint[] { r, t, l, b };
         }
 
-
+        /// <summary>
+        /// [bottom right, bottom top, tono
+        /// </summary>
+        /// <param name="start">Start.</param>
+        /// <param name="dim">Dim.</param>
         public MdCoordinates(MdPoint start, MdDimension dim)
         {
             Corners = new MdPoint[]

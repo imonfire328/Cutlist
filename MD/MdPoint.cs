@@ -17,7 +17,7 @@ namespace CLGenerator.MD
             return base.ToBinary(X, Y);
         }
 
-        public bool Compare(MdPoint p)
+        public bool Equals(MdPoint p)
         {
             if (p.Y == Y && p.X == X)
                 return true;

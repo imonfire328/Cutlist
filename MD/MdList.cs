@@ -28,6 +28,10 @@ namespace CLGenerator.MD
         }
 
 
+        /// <summary>
+        /// Get the next available board in list.
+        /// </summary>
+        /// <returns>The board.</returns>
         public MdBoard CycleBoard()
         {
             var index = _boards.IndexOf(_currentBoard);
@@ -42,6 +46,10 @@ namespace CLGenerator.MD
         }
        
 
+        /// <summary>
+        /// Get the 
+        /// </summary>
+        /// <param name="alignment">Alignment.</param>
         public void AddAlignment(Align alignment){
             _currentBoard.AddAlignment(alignment);
             _resetCurrentBoard();

@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace CLGenerator.MD
 {
+    /// <summary>
+    /// Represents a group of peices within a shared rectangle
+    /// </summary>
     public class MdSection 
     {
         public MdPoint Start { get; private set; }

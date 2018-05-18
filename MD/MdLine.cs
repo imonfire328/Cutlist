@@ -5,7 +5,9 @@ using iTextSharp.text.pdf;
 
 namespace CLGenerator.MD
 {
-
+    /// <summary>
+    /// Represents a line between two parallel pieces
+    /// </summary>
     public interface IMdLine
     {
         MdPoint Start { get; } 
@@ -17,6 +19,9 @@ namespace CLGenerator.MD
     }
 
 
+    /// <summary>
+    /// Horizontal line
+    /// </summary>
     public class MdHorLine : MdLine, IMdLine{
         
         public MdHorLine(MdPoint start, MdPoint end) : base(start, end) { }
@@ -43,6 +48,9 @@ namespace CLGenerator.MD
     }
 
 
+    /// <summary>
+    /// Vertical line
+    /// </summary>
     public class MdVertLine : MdLine, IMdLine
     {
         public MdVertLine(MdPoint start, MdPoint end): base(start, end){}
@@ -69,8 +77,9 @@ namespace CLGenerator.MD
     }
 
 
-
-
+    /// <summary>
+    /// Base class for unspecified line
+    /// </summary>
     public class MdLine 
     {
         public MdPoint Start { get; private set; }
@@ -87,8 +96,12 @@ namespace CLGenerator.MD
             Debug.WriteLine("Line Created: " + id + " (" + Start.X + " x " + Start.Y + "), to (" + End.X + " x " + End.Y + ")");
         }
 
+        /// <summary>
+        /// Extend a line to new point
+        /// </summary>
+        /// <param name="line">Line.</param>
         public void AddComposite(IMdLine line){
-            if (!line.Start.Compare(End))
+            if (!line.Start.Equals(End))
                 throw new Exception("the lines cannot be combined because they do not match");
             End = line.End;
             Debug.WriteLine("Merge: " + line.id + " into " + id + " (" + Start.X + " x " + Start.Y + "), to (" + End.X + " x " + End.Y + ")");
@@ -96,7 +109,7 @@ namespace CLGenerator.MD
 
 
         public bool Equals(MdLine line){
-            if (Start.Compare(line.Start) && End.Compare(line.End))
+            if (Start.Equals(line.Start) && End.Equals(line.End))
                 return true;
             return false; 
         }

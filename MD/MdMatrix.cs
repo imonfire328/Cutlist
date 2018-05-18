@@ -6,6 +6,9 @@ using CLGenerator.ST;
 
 namespace CLGenerator.MD
 {
+    /// <summary>
+    /// Represents data on a board gathered from its pieces
+    /// </summary>
     public class MdMatrix
     {
         List<IMdLine> _lines { get; set; } = new List<IMdLine>();
@@ -33,12 +36,12 @@ namespace CLGenerator.MD
 
             // vertical
             foreach(MdVertLine v in lines.OfType<MdVertLine>()){
-                newLines = _mergeNewLine(newLines, v, _lines.OfType<MdVertLine>().FirstOrDefault(r => r.End.Compare(v.Start)));
+                newLines = _mergeNewLine(newLines, v, _lines.OfType<MdVertLine>().FirstOrDefault(r => r.End.Equals(v.Start)));
             }
 
             // horizontal
             foreach(MdHorLine h in lines.OfType<MdHorLine>()){
-                newLines = _mergeNewLine(newLines, h, _lines.OfType<MdHorLine>().FirstOrDefault(r => r.End.Compare(h.Start)));
+                newLines = _mergeNewLine(newLines, h, _lines.OfType<MdHorLine>().FirstOrDefault(r => r.End.Equals(h.Start)));
             }
             _lines = newLines;
         }
