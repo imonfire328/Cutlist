@@ -21,6 +21,7 @@ namespace CLGenerator.BD
             _alignDec = alignDec;
         }
 
+
         public MdList Build()
         {
             var c = 0; 
@@ -31,9 +32,10 @@ namespace CLGenerator.BD
                 while(fit == null)
                 {
                     var alignment = new Align(_alignDec);
+
                     fit = alignment.Implement(_cutList.GetCurrentBoard(), currentDim);
                     if (fit == null)
-                        _cutList.CycleBoard();
+                        _cutList.CycleBoard(currentDim.Material);
                     else
                         _cutList.AddAlignment(alignment);
                 }

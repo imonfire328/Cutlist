@@ -39,10 +39,24 @@ namespace CLGenerator.MD
         }
 
         public PdfContentByte Write(PdfContentByte cb, int zoom){
-            cb.SetColorStroke(new BaseColor(200, 140, 34));
+
+            var color = new BaseColor(200, 140, 34);
+            cb.SetColorStroke(color);
             cb.MoveTo(Start.X * zoom, Start.Y * zoom);
             cb.LineTo(End.X * zoom, End.Y * zoom);
             cb.Stroke();
+
+            //get center coordinates within rectangle
+            float textX = (float)End.X * zoom + 40;
+            //account for height of text by subtracting
+            float textY = (float)End.Y * zoom;
+
+            // draw text
+            cb.BeginText();
+            cb.SetColorFill(color);
+            cb.SetFontAndSize(BaseFont.CreateFont(BaseFont.HELVETICA, BaseFont.WINANSI, false), 7);
+            cb.ShowTextAligned(Element.ALIGN_CENTER, "Y: " + End.Y, textX, textY, 0f);
+            cb.EndText();
             return cb;
         }
     }
@@ -68,10 +82,23 @@ namespace CLGenerator.MD
 
         public PdfContentByte Write(PdfContentByte cb, int zoom)
         {
-            cb.SetColorStroke(new BaseColor(85, 200, 100));
+            var color = new BaseColor(85, 200, 100);
+            cb.SetColorStroke(color);
             cb.MoveTo(Start.X * zoom, Start.Y * zoom);
             cb.LineTo(End.X * zoom, End.Y * zoom);
             cb.Stroke();
+
+            //get center coordinates within rectangle
+            float textX = (float)End.X * zoom; 
+            //account for height of text by subtracting
+            float textY = (float)End.Y * zoom + 40;
+
+            // draw text
+            cb.BeginText();
+            cb.SetColorFill(color);
+            cb.SetFontAndSize(BaseFont.CreateFont(BaseFont.HELVETICA, BaseFont.WINANSI, false), 7);
+            cb.ShowTextAligned(Element.ALIGN_CENTER, "X: " + End.X, textX, textY, 0f);
+            cb.EndText();
             return cb;
         }
     }

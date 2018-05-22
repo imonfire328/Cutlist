@@ -1,8 +1,7 @@
+/Users/tamariancarpets/Projects/CLGenerator/CLGenerator/obj/x86/Debug/CLGenerator.csproj.CoreCompileInputs.cache
 /Users/tamariancarpets/Projects/CLGenerator/CLGenerator/bin/Debug/CLGenerator.exe
 /Users/tamariancarpets/Projects/CLGenerator/CLGenerator/bin/Debug/CLGenerator.pdb
 /Users/tamariancarpets/Projects/CLGenerator/CLGenerator/bin/Debug/itextsharp.dll
 /Users/tamariancarpets/Projects/CLGenerator/CLGenerator/bin/Debug/itextsharp.xml
-/Users/tamariancarpets/Projects/CLGenerator/CLGenerator/obj/x86/Debug/CLGenerator.csproj.CoreCompileInputs.cache
 /Users/tamariancarpets/Projects/CLGenerator/CLGenerator/obj/x86/Debug/CLGenerator.exe
 /Users/tamariancarpets/Projects/CLGenerator/CLGenerator/obj/x86/Debug/CLGenerator.pdb
-/Users/tamariancarpets/Projects/CLGenerator/CLGenerator/obj/x86/Debug/CLGenerator.csprojResolveAssemblyReference.cache

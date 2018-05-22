@@ -12,11 +12,13 @@ namespace CLGenerator.ST
     }
 
 
+    /// <summary>
+    /// Represents a dimension that fits at a certain point on a board
+    /// </summary>
     public class Align
     {
         public MdPiece Alignment { get; private set; }
         private IAlignDecorator _alignStgy;
-
 
         public Align(IAlignDecorator alignStgy)
         {
@@ -31,7 +33,9 @@ namespace CLGenerator.ST
         }
     }
 
-
+    /// <summary>
+    /// Find a point on a board that fits a dimension
+    /// </summary>
     public abstract class AlignDecorator : IAlignDecorator
     {
         public AlignDecorator StAlignDec { get; private set; }
@@ -44,6 +48,13 @@ namespace CLGenerator.ST
 
         public AlignDecorator() { }
 
+        /// <summary>
+        /// Try each point within a boards open edges to place dimension
+        /// </summary>
+        /// <returns>The align.</returns>
+        /// <param name="edges">Edges.</param>
+        /// <param name="dim">Dim.</param>
+        /// <param name="board">Board.</param>
         public MdPiece AttemptAlign(List<MdPoint> edges, MdDimension dim, MdBoard board)
         {
             foreach (MdPoint edge in edges)
@@ -56,6 +67,9 @@ namespace CLGenerator.ST
     }
 
 
+    /// <summary>
+    /// Aligns pieces with a vertical priority
+    /// </summary>
     public class StAlignVertical : AlignDecorator
     {
         public StAlignVertical(AlignDecorator align) : base (align){ }
@@ -81,7 +95,7 @@ namespace CLGenerator.ST
 
 
     /// <summary>
-    /// Strategy to prioritize aligning pieces horizontally.
+    /// Aligns a piece with a horizontal priority
     /// </summary>
     public class StAlignHorizontal : AlignDecorator
     {

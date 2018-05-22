@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using CLGenerator.BD;
+using CLGenerator.MD.MdMaterial;
 using CLGenerator.ST;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
@@ -13,10 +14,10 @@ namespace CLGenerator.MD
         public int _id { get; private set; }
         public List<MdPoint> AvailablePoints { get; private set; } = new List<MdPoint>() { new MdPoint(0, 0) };
 
-
         List<MdPiece> _pieces { get; set; } = new List<MdPiece>();
         MdMatrix _matrix { get; set; } = new MdMatrix();
         MdDimension _dim;
+        IMaterial _material;
         IPointOrderStrategy _edgeOrderStrgy;
         IDcDimRestriction _pieceRestrictions;
         double _availableArea;
@@ -29,18 +30,19 @@ namespace CLGenerator.MD
             _availableArea = _dim.CalcArea();
             _edgeOrderStrgy = edgeOrderStrgy;
             _pieceRestrictions = pieceRestrictions;
+            _material = _dim.Material;
         }
 
 
-        public MdBoard(MdPiece piece, MdDimension dim, IPointOrderStrategy edgeOrderStrgy, IDcDimRestriction pieceRestrictions)
+        public MdBoard(MdDimension dim, IPointOrderStrategy edgeOrderStrgy, IDcDimRestriction pieceRestrictions, IMaterial material)
         {
             _pieces = new List<MdPiece>();
-            _pieces.Add(piece);
             _dim = dim;
-            _id = Convert.ToInt32(DateTime.Now.ToString("mmssfffffff"));
+            _id = Convert.ToInt32(DateTime.Now.ToString("mmssffff"));
             _availableArea = _dim.CalcArea();
             _edgeOrderStrgy = edgeOrderStrgy;
             _pieceRestrictions = pieceRestrictions;
+            _material = material;
         }
 
 
@@ -64,6 +66,7 @@ namespace CLGenerator.MD
         /// <param name="dim">Dim.</param>
         public bool TryAlignment(MdDimension dim, MdPoint point)
         {
+            if (dim.Material.Thickness != _material.Thickness) return false;
             if (_pieces.Count() == 0) return true; 
             if (!WithinBounds(dim, point)) return false;
             if (_pieceRestrictions.Restricted(this, point, dim))return false;
@@ -83,8 +86,16 @@ namespace CLGenerator.MD
         /// <param name="cb">Cb.</param>
         public PdfContentByte WritePieces(PdfContentByte cb)
         {
+            // draw text
+            cb.BeginText();
+            cb.SetColorFill(_dim.ColorFill[0]);
+            cb.SetFontAndSize(BaseFont.CreateFont(BaseFont.HELVETICA, BaseFont.WINANSI, false), 12);
+            cb.ShowTextAligned(Element.ALIGN_CENTER, "Thickness: " + _material.Thickness.GetMeasure().ToString(), cb.PdfDocument.Right - 100, 20, 0f);
+            cb.EndText();
+
             cb.SetColorStroke(new BaseColor(0, 0, 0));
             cb.SetColorFill(new BaseColor(255, 255, 255));
+
             foreach(MdPiece p in _pieces){
                 cb = p.Write(cb);
             }

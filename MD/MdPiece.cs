@@ -76,7 +76,7 @@ namespace CLGenerator.MD
 
             // set position values for piece
             var pProporitons = _pdfShapeWriter.Proportions(_start, _dim, Constants.PdfZoom);
-            cb = _pdfShapeWriter.DrawRectangle(cb, pProporitons);
+            cb = _pdfShapeWriter.DrawRectangle(cb, pProporitons, _dim.ColorFill[1]);
 
             double x = pProporitons[0];
             double y = pProporitons[1];
@@ -86,16 +86,17 @@ namespace CLGenerator.MD
             double centerY = y + (height / 2);
            
             //get center coordinates within rectangle
-            float textX = (float)centerX - (float)(StaticHelpers.GetTextCenterPoint(id, 2));
+            float textX = (float)centerX - (float)(StaticHelpers.GetTextCenterPoint(_dim.Name, 0));
             //account for height of text by subtracting
             float textY = (float)centerY - 3;
 
+
             // draw text
-            cb.SetFontAndSize(BaseFont.CreateFont(BaseFont.HELVETICA, BaseFont.WINANSI, false), 7);
             cb.BeginText();
-            cb.ShowTextAligned(Element.ALIGN_CENTER, id, textX, textY, 0f);
+            cb.SetColorFill(_dim.ColorFill[0]);
+            cb.SetFontAndSize(BaseFont.CreateFont(BaseFont.HELVETICA, BaseFont.WINANSI, false), 7);
+            cb.ShowTextAligned(Element.ALIGN_CENTER, _dim.Name, textX, textY, 0f);
             cb.EndText();
-            cb.Stroke();
             return cb;
         }
     }

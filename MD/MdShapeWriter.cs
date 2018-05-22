@@ -34,7 +34,8 @@ namespace CLGenerator.MD
     /// </summary>
     public class MdRectangleWriter
     {
-        public PdfContentByte DrawRectangle(PdfContentByte cb, double[] proportions){
+        public PdfContentByte DrawRectangle(PdfContentByte cb, double[] proportions, BaseColor color){
+            cb.SetColorFill(color);
             cb.Rectangle(proportions[0], proportions[1], proportions[3], proportions[2]);
             cb.FillStroke();
             return cb;

@@ -40,7 +40,6 @@
     <Compile Include="MD\MdPiece.cs" />
     <Compile Include="MD\MdCoordinates.cs" />
     <Compile Include="MD\MdPoint.cs" />
-    <Compile Include="MD\MdDimension.cs" />
     <Compile Include="MD\MdBoard.cs" />
     <Compile Include="BD\IBuilder.cs" />
     <Compile Include="BD\Operator.cs" />
@@ -60,12 +59,24 @@
     <Compile Include="Constants.cs" />
     <Compile Include="MD\MdShapeWriter.cs" />
     <Compile Include="ST\IDcDimRestriction.cs" />
+    <Compile Include="MD\MdDimList.cs" />
+    <Compile Include="MD\MdDimension.cs" />
+    <Compile Include="FC\CaseFactory.cs" />
+    <Compile Include="MD\Structure\IBaseStructure.cs" />
+    <Compile Include="MD\Structure\IPlane.cs" />
+    <Compile Include="MD\Measure\IMeasure.cs" />
+    <Compile Include="MD\Material\IMaterial.cs" />
+    <Compile Include="MD\MdRectangle.cs" />
+    <Compile Include="MD\Structure\StructureCopier.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="MD\" />
     <Folder Include="BD\" />
     <Folder Include="ST\" />
     <Folder Include="FC\" />
+    <Folder Include="MD\Structure\" />
+    <Folder Include="MD\Measure\" />
+    <Folder Include="MD\Material\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="CutList.sln" />

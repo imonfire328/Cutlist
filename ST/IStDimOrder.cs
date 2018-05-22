@@ -5,10 +5,15 @@ using CLGenerator.MD;
 
 namespace CLGenerator.ST
 {
+    /// <summary>
+    /// Interface for setting the order of dimensions
+    /// </summary>
     public interface IStDimOrder : IStrategy<List<MdDimension>>{}
 
 
-
+    /// <summary>
+    /// Base class for setting dimension order
+    /// </summary>
     public class StDimOrder : IStDimOrder
     {
         IStDimOrder _decorator; 
@@ -88,7 +93,7 @@ namespace CLGenerator.ST
 
 
     /// <summary>
-    /// Order dimesions by 
+    /// Order dimesions by descening binary amount
     /// </summary>
     public class DcOrderDimension : IStDimOrder
     {
@@ -115,7 +120,9 @@ namespace CLGenerator.ST
         }
     }
 
-
+    /// <summary>
+    /// Order dimensions in groups based on the boards height
+    /// </summary>
     public class DcOrderWithinBoundsY : IStDimOrder
     {
         double _yBound;
@@ -123,15 +130,15 @@ namespace CLGenerator.ST
         List<MdDimension> _dimensions;
         IStDimOrder _decorator; 
 
-        public DcOrderWithinBoundsY(List<MdDimension> dim, double yBound, int maxReach = 100000){
-            _yBound = yBound;
+        public DcOrderWithinBoundsY(List<MdDimension> dim, MdDimension boardDim, int maxReach = 100000){
+            _yBound = boardDim.Height;
             _dimensions = dim;
             _reach = maxReach;
         }
 
-        public DcOrderWithinBoundsY(IStDimOrder dec, double yBound, int maxReach = 100000){
+        public DcOrderWithinBoundsY(IStDimOrder dec, MdDimension boardDim, int maxReach = 100000){
             _decorator = dec;
-            _yBound = yBound;
+            _yBound = boardDim.Height;
             _reach = maxReach;
         }
 
@@ -143,13 +150,11 @@ namespace CLGenerator.ST
 
             var newDims = new List<MdDimension>();
             for (int i = 0; _dimensions.Count() != 0; i++){
-
-
+                
                 var m = _dimensions[0];
                 var totalHeight = m.Height;
                 newDims.Add(m);
                 _dimensions.Remove(m);
-
 
                 var matchingWidths = _dimensions.Where(r => r.Width == m.Width).Take(_reach).Select(r => r).ToList();
                 foreach(MdDimension dim in matchingWidths){

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using CLGenerator.BD;
+using CLGenerator.MD.MdMaterial;
 using CLGenerator.ST;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
@@ -32,11 +33,11 @@ namespace CLGenerator.MD
         /// Get the next available board in list.
         /// </summary>
         /// <returns>The board.</returns>
-        public MdBoard CycleBoard()
+        public MdBoard CycleBoard(IMaterial boardMaterial)
         {
             var index = _boards.IndexOf(_currentBoard);
             if (index + 1 == _boards.Count()){
-                _currentBoard = new MdBoard(_boardTemplate, _boardEdgeOrdStrgy, _restrictions);
+                _currentBoard = new MdBoard(_boardTemplate, _boardEdgeOrdStrgy, _restrictions, boardMaterial);
                 _boards.Add(_currentBoard);
             }
             else{
@@ -67,14 +68,14 @@ namespace CLGenerator.MD
                 doc.NewPage();
                 cb.SetColorStroke(new BaseColor(25, 75, 159));
                 cb.SetColorFill(new BaseColor(230, 230, 230));
-                cb = new MdPiece(new MdPoint(0, 0), new MdDimension(96, 48)).Write(cb);
+                cb = new MdPiece(new MdPoint(0, 0), _boardTemplate).Write(cb);
+
                 cb.FillStroke();
                 cb = b.WritePieces(cb);
                 cb = b.WriteCutlines(cb);
             }
             return doc;
         }
-
 
         void _resetCurrentBoard(){
             _currentBoard = _boards.First();
