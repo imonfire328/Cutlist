@@ -54,7 +54,7 @@ namespace CLGenerator.MD
         /// <param name="lines">Lines.</param>
         /// <param name="newLine">New line.</param>
         /// <param name="curLine">Current line.</param>
-        List<IMdLine> _mergeNewLine(List<IMdLine> lines, IMdLine newLine, IMdLine syncLine){
+        List<IMdLine> _mergeNewLine(List<IMdLine> lines, IMdLineDirection newLine, IMdLineDirection syncLine){
             if (syncLine == null){
                 lines.Add(newLine);
             }

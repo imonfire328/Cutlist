@@ -24,10 +24,12 @@ namespace CLGenerator.MD
             Corners = new MdPoint[]
             {
                 start,
-                new MdPoint(start.X, dim.Height + start.Y ),
-                new MdPoint(start.X + dim.Width, start.Y + dim.Height),
-                new MdPoint(start.X + dim.Width, start.Y ),
+                new MdPoint(start.X, dim.Y + start.Y ),
+                new MdPoint(start.X + dim.X, start.Y + dim.Y),
+                new MdPoint(start.X + dim.X, start.Y ),
             };
         }
+
+
     }
 }

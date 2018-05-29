@@ -14,18 +14,16 @@ namespace CLGenerator.MD
         MdBoard _currentBoard { get; set; }
         List<MdBoard> _boards { get; set; } = new List<MdBoard>();
 
-        MdDimension _boardTemplate;
-        IPointOrderStrategy _boardEdgeOrdStrgy { get; set; }
-        IDcDimRestriction _restrictions { get; set; } 
+        IPointOrderStrategy _boardEdgeOrdStrgy;
+        IDcDimRestriction _restrictions;
+        IStBoardOrder _boardOrder;
 
 
-        public MdList(MdDimension boardTemplate, IPointOrderStrategy boardEdgeOrdStrgy, DcKerfRestriction restrictions)
+        public MdList(IPointOrderStrategy boardEdgeOrdStrgy, DcKerfRestriction restrictions, IStBoardOrder boardOrder)
         {
             _restrictions = restrictions;
-            _boardTemplate = boardTemplate;
             _boardEdgeOrdStrgy = boardEdgeOrdStrgy;
-            _boards.Add(new MdBoard(_boardTemplate, _boardEdgeOrdStrgy, restrictions));
-            _resetCurrentBoard();
+            _boardOrder = boardOrder;
         }
 
 
@@ -33,11 +31,11 @@ namespace CLGenerator.MD
         /// Get the next available board in list.
         /// </summary>
         /// <returns>The board.</returns>
-        public MdBoard CycleBoard(IMaterial boardMaterial)
+        public MdBoard CycleBoard(MdDimension dim)
         {
             var index = _boards.IndexOf(_currentBoard);
             if (index + 1 == _boards.Count()){
-                _currentBoard = new MdBoard(_boardTemplate, _boardEdgeOrdStrgy, _restrictions, boardMaterial);
+                _currentBoard = new MdBoard(_boardEdgeOrdStrgy, _restrictions, dim.Material);
                 _boards.Add(_currentBoard);
             }
             else{
@@ -57,6 +55,11 @@ namespace CLGenerator.MD
         }
 
 
+        public void OrderBoards(){
+            _boards = _boardOrder.Implement(_boards);
+        }
+
+
         public MdBoard GetCurrentBoard(){
             return _currentBoard;
         }
@@ -68,7 +71,7 @@ namespace CLGenerator.MD
                 doc.NewPage();
                 cb.SetColorStroke(new BaseColor(25, 75, 159));
                 cb.SetColorFill(new BaseColor(230, 230, 230));
-                cb = new MdPiece(new MdPoint(0, 0), _boardTemplate).Write(cb);
+                cb = b.WriteBoard(cb);
 
                 cb.FillStroke();
                 cb = b.WritePieces(cb);

@@ -5,6 +5,7 @@ using CLGenerator.ST;
 
 namespace CLGenerator.BD
 {
+
     /// <summary>
     /// build a cutlist from list of dimensions
     /// </summary>
@@ -19,12 +20,17 @@ namespace CLGenerator.BD
             _dimensions = new Queue<MdDimension>(preOrganize.Implement());
             _cutList = cutList;
             _alignDec = alignDec;
+
         }
 
 
         public MdList Build()
         {
-            var c = 0; 
+            var c = 0;
+
+            //add first board based on first dimension in list
+            _cutList.CycleBoard(_dimensions.Peek());
+
             while(_dimensions.Count != 0)
             {
                 var currentDim = new MdDimension(++c, _dimensions.Dequeue());
@@ -35,12 +41,13 @@ namespace CLGenerator.BD
 
                     fit = alignment.Implement(_cutList.GetCurrentBoard(), currentDim);
                     if (fit == null)
-                        _cutList.CycleBoard(currentDim.Material);
+                        _cutList.CycleBoard(currentDim);
                     else
                         _cutList.AddAlignment(alignment);
                 }
-            }
+            } 
 
+            _cutList.OrderBoards();
             return _cutList;
         }
     }

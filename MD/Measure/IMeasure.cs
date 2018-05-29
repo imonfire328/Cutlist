@@ -83,7 +83,7 @@ namespace CLGenerator.MD.MdMeasure
     public class MSqFt : IMeasure{
         double _sqft; 
         public MSqFt(double x, double y){
-            _sqft = x * y;
+            _sqft = x * y / 144;
         }
         public double GetMeasure(){
             return _sqft;

@@ -18,17 +18,26 @@ namespace CLGenerator.ST
     public class Align
     {
         public MdPiece Alignment { get; private set; }
-        private IAlignDecorator _alignStgy;
+        IAlignDecorator _alignStgy;
+        IDcDimAllowence _allowences; 
 
-        public Align(IAlignDecorator alignStgy)
+        public Align(IAlignDecorator alignStgy, IDcDimAllowence allowences)
         {
-            _alignStgy = alignStgy;           
+            _alignStgy = alignStgy;
+            _allowences = allowences;
+        }
+
+        public Align(IAlignDecorator alignStgy){
+            _alignStgy = alignStgy;
         }
 
         // return an aligned peice
         public MdPiece Implement(MdBoard board, MdDimension dim)
         {
             Alignment = _alignStgy.Implement(board, dim);
+            if(Alignment == null && _allowences != null){
+                Alignment = _allowences.TryAllowance(_alignStgy, board, dim);
+            }
             return Alignment;
         }
     }

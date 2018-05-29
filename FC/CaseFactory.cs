@@ -3,13 +3,13 @@ using CLGenerator.MD;
 
 namespace CLGenerator.FC
 {
-    public class CaseFactory : IFactory<IDimension>
+    public class CaseFactory : IFactory<IMdDimension>
     {
         public CaseFactory()
         {
         }
 
-        public IDimension GetInstance()
+        public IMdDimension GetInstance()
         {
             throw new NotImplementedException();
         }

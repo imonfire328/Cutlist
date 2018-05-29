@@ -6,33 +6,65 @@ namespace CLGenerator.ST
 {
     public interface IStDimOrientationStrategy : IStrategy<List<MdDimension>>
     {
-        
     }
 
-    public class StOrientToHeight : IStDimOrientationStrategy
+
+    public abstract class StDimOrientation 
     {
-        private List<MdDimension> _dims { get; set; } = new List<MdDimension>();
-        
-        public StOrientToHeight(List<MdDimension> dims){
-            _dims = dims;
+        public List<MdDimension> Dims { get; private set; }
+
+        public StDimOrientation(List<MdDimension> dims){
+            Dims = dims;
+        }
+
+        public MdDimension Rotate(MdDimension dim){
+            // if dim exceeds material size return original dim
+            if (dim.X > dim.Material.Y || dim.Y > dim.Material.X){
+                return dim;
+            } 
+            var newDim =  new MdDimension(new MdRectangle(dim.Y, dim.X), dim.Name, dim.ColorFill, dim.Material);
+            return newDim;
+        }
+    }
+   
+
+    public class StOrientToHeight : StDimOrientation
+    {
+        public StOrientToHeight(List<MdDimension> dims) : base(dims)
+        {
         }
         
         public List<MdDimension> Implement()
         {
-            for (int i = 0; i < _dims.Count; i++)
-            {
-                var dim = _dims[i];
-                if (dim.Width > dim.Height){
-                    _dims[i] = _rotate(dim);
+            for (int i = 0; i < Dims.Count; i++){
+                var dim = Dims[i];
+                if(dim.Name == "book:R wall"){
+                    
+                }
+
+                if (dim.X > dim.Y){
+                    Dims[i] = Rotate(dim);
                 }
             }
-            return _dims;
+            return Dims;
+        }
+    }
+
+    public class StOrientToWidth : StDimOrientation
+    {
+        public StOrientToWidth(List<MdDimension> dims): base(dims)
+        {
         }
 
-        ///todo: maybe add within dimension
-        private MdDimension _rotate(MdDimension dim)
+        public List<MdDimension> Implement()
         {
-            return new MdDimension(new MdRectangle(dim.Height, dim.Width), dim.Name, dim.ColorFill, dim.Material);
+            for (int i = 0; i < Dims.Count; i++){
+                var dim = Dims[i];
+                if (dim.Y > dim.X){
+                    Rotate(dim);
+                }
+            }
+            return Dims;
         }
     }
 }

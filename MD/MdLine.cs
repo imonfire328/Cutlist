@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using CLGenerator.MD.MdMeasure;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
 
@@ -11,18 +13,59 @@ namespace CLGenerator.MD
     public interface IMdLine
     {
         MdPoint Start { get; } 
-        MdPoint End { get; } 
-        void AddComposite(IMdLine line);
+        MdPoint End { get; }
         bool Equals(MdLine line);
         string id { get;} 
         PdfContentByte Write(PdfContentByte cb, int zoom);
+    }
+
+    public interface IMdLineDirection : IMdLine
+    {
+        void AddComposite(IMdLine line);
+        bool IsAffectedByKerf(IMdLine line);
+    }
+
+    /// <summary>
+    /// A line that accounts for added kerf of additional cuts 
+    /// </summary>
+    public class CutLine : IMdLine
+    {
+        public MdPoint Start { get; private set; }
+        public MdPoint End { get; private set; }
+        public string id { get; private set; }
+        IMdLine _lineDirection; 
+
+        public CutLine(IMdLineDirection lineDirection, List<IMdLineDirection> matchingLineTypes, MWidth kerf){
+            _lineDirection = lineDirection;
+            int ammnt = 0;
+
+            foreach(IMdLineDirection line in matchingLineTypes){
+                if (line.Equals(_lineDirection))
+                    continue;
+                if (lineDirection.IsAffectedByKerf(line))
+                    ammnt++;
+            }
+        }
+
+
+
+
+        public bool Equals(MdLine line)
+        {
+            throw new NotImplementedException();
+        }
+
+        public PdfContentByte Write(PdfContentByte cb, int zoom)
+        {
+            throw new NotImplementedException();
+        }
     }
 
 
     /// <summary>
     /// Horizontal line
     /// </summary>
-    public class MdHorLine : MdLine, IMdLine{
+    public class MdHorLine : MdLine, IMdLineDirection{
         
         public MdHorLine(MdPoint start, MdPoint end) : base(start, end) { }
 
@@ -36,6 +79,14 @@ namespace CLGenerator.MD
             if ((vline.End.X == this.End.X && vline.End.Y > this.End.Y) || this.Start.X != 0)
                 return true;
             return false;
+        }
+
+        public bool IsAffectedByKerf(IMdLine line)
+        {
+            if (line.GetType() != this.GetType()) return false;
+            if (line.Start.Y < Start.Y && line.Start.X < End.X && line.Start.X > Start.X) return true;
+            else
+                return false;
         }
 
         public PdfContentByte Write(PdfContentByte cb, int zoom){
@@ -65,7 +116,7 @@ namespace CLGenerator.MD
     /// <summary>
     /// Vertical line
     /// </summary>
-    public class MdVertLine : MdLine, IMdLine
+    public class MdVertLine : MdLine, IMdLineDirection
     {
         public MdVertLine(MdPoint start, MdPoint end): base(start, end){}
         public bool Intersects(MdHorLine hLine)
@@ -78,6 +129,14 @@ namespace CLGenerator.MD
             if ((this.End.Y == hLine.End.Y && this.End.X < hLine.End.X)|| this.Start.Y != 0)
                 return true;
             return false;
+        }
+
+        public bool IsAffectedByKerf(IMdLine line)
+        {
+            if (line.GetType() != this.GetType()) return false;
+            if (line.Start.X > Start.X && line.Start.Y < End.Y && line.Start.Y > Start.Y) return true;
+            else
+                return false;
         }
 
         public PdfContentByte Write(PdfContentByte cb, int zoom)

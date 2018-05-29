@@ -11,5 +11,27 @@ namespace CLGenerator.MD
             X = x;
             Y = y;
         }
+
+        public MdRectangle(MdDimension dim){
+            X = dim.X;
+            Y = dim.Y;
+        }
+
+        public MdRectangle(MdRectangle rect){
+            X = rect.X;
+            Y = rect.Y;
+        }
+
+        public double CalcArea()
+        {
+            return X * Y;
+        }
+
+
+        public override string ToString()
+        {
+            return X + "x" + Y;
+        }
+
     }
 }

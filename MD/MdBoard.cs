@@ -9,40 +9,24 @@ using iTextSharp.text.pdf;
 
 namespace CLGenerator.MD
 {
-    public class MdBoard 
+    public class MdBoard : MdDimension
     {
         public int _id { get; private set; }
         public List<MdPoint> AvailablePoints { get; private set; } = new List<MdPoint>() { new MdPoint(0, 0) };
 
         List<MdPiece> _pieces { get; set; } = new List<MdPiece>();
         MdMatrix _matrix { get; set; } = new MdMatrix();
-        MdDimension _dim;
-        IMaterial _material;
         IPointOrderStrategy _edgeOrderStrgy;
         IDcDimRestriction _pieceRestrictions;
         double _availableArea;
 
-
-        public MdBoard(MdDimension dim, IPointOrderStrategy edgeOrderStrgy, IDcDimRestriction pieceRestrictions)
-        {
-            _dim = dim;
-            _id = Convert.ToInt32(DateTime.Now.ToString("mmssffff"));
-            _availableArea = _dim.CalcArea();
-            _edgeOrderStrgy = edgeOrderStrgy;
-            _pieceRestrictions = pieceRestrictions;
-            _material = _dim.Material;
-        }
-
-
-        public MdBoard(MdDimension dim, IPointOrderStrategy edgeOrderStrgy, IDcDimRestriction pieceRestrictions, IMaterial material)
+        public MdBoard(IPointOrderStrategy edgeOrderStrgy, IDcDimRestriction pieceRestrictions, Material material) : base(material, new MdDimension(material))
         {
             _pieces = new List<MdPiece>();
-            _dim = dim;
             _id = Convert.ToInt32(DateTime.Now.ToString("mmssffff"));
-            _availableArea = _dim.CalcArea();
+            _availableArea = CalcArea();
             _edgeOrderStrgy = edgeOrderStrgy;
             _pieceRestrictions = pieceRestrictions;
-            _material = material;
         }
 
 
@@ -59,6 +43,7 @@ namespace CLGenerator.MD
         }
 
 
+
         /// <summary>
         /// determine 
         /// </summary>
@@ -66,7 +51,7 @@ namespace CLGenerator.MD
         /// <param name="dim">Dim.</param>
         public bool TryAlignment(MdDimension dim, MdPoint point)
         {
-            if (dim.Material.Thickness != _material.Thickness) return false;
+            if (dim.Material.Thickness != Material.Thickness) return false;
             if (_pieces.Count() == 0) return true; 
             if (!WithinBounds(dim, point)) return false;
             if (_pieceRestrictions.Restricted(this, point, dim))return false;
@@ -87,18 +72,19 @@ namespace CLGenerator.MD
         public PdfContentByte WritePieces(PdfContentByte cb)
         {
             // draw text
-            cb.BeginText();
-            cb.SetColorFill(_dim.ColorFill[0]);
-            cb.SetFontAndSize(BaseFont.CreateFont(BaseFont.HELVETICA, BaseFont.WINANSI, false), 12);
-            cb.ShowTextAligned(Element.ALIGN_CENTER, "Thickness: " + _material.Thickness.GetMeasure().ToString(), cb.PdfDocument.Right - 100, 20, 0f);
-            cb.EndText();
-
             cb.SetColorStroke(new BaseColor(0, 0, 0));
             cb.SetColorFill(new BaseColor(255, 255, 255));
 
             foreach(MdPiece p in _pieces){
                 cb = p.Write(cb);
             }
+            return cb;
+        }
+
+
+        public PdfContentByte WriteBoard(PdfContentByte cb)
+        {
+            new MdPiece(new MdPoint(0, 0), GetBase()).Write(cb);
             return cb;
         }
 
@@ -126,9 +112,9 @@ namespace CLGenerator.MD
         {
             if (dim.CalcArea() > _availableArea)
                 return false;
-            if (startPoint.X + dim.Width > _dim.Width)
+            if (startPoint.X + dim.X > X)
                 return false;
-            if (startPoint.Y + dim.Height > _dim.Height)
+            if (startPoint.Y + dim.Y > Y)
                 return false;
 
             return true; 
@@ -136,17 +122,17 @@ namespace CLGenerator.MD
 
 
         public MdPoint SetToHeight(MdPoint p){
-            return new MdPoint(p.X, _dim.Height);
+            return new MdPoint(p.X, Y);
         }
 
         public MdPoint SetToWidth(MdPoint p){
-            return new MdPoint(_dim.Width, p.Y);
+            return new MdPoint(X, p.Y);
         }
 
 
         double _calcAvailableArea()
         {
-            double area = _dim.CalcArea(); 
+            double area = CalcArea(); 
             foreach(MdPiece p in _pieces){
                 area -= p.Area;
             }

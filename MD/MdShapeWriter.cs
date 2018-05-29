@@ -23,8 +23,8 @@ namespace CLGenerator.MD
             {
                 point.X * zoom,
                 point.Y * zoom,
-                dim.Height * zoom,
-                dim.Width * zoom
+                dim.Y * zoom,
+                dim.X * zoom
             };
         }
     }

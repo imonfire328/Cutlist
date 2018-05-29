@@ -3,23 +3,23 @@ using System.Collections.Generic;
 
 namespace CLGenerator.MD.MdStructure
 {
-    public interface IWall : IStructure
+    public interface IMdWall : IMdCabinet
     {
     }
 
 
-    public class HorizontalWall : IWall
+    public class MdHorizontalWall : IMdWall
     {
         MdDimension _dim;
         
-        public HorizontalWall(IBaseStructure struc)
+        public MdHorizontalWall(IMdBaseCabinet struc)
         {
             _dim = new MdDimension(
                 new MdRectangle(
                     struc.InsideWidth(), 
                     struc.Depth.GetMeasure()
                 ), 
-                struc.Dim.Name + ":wall", 
+                struc.Dim.Name + ":shelf", 
                 struc.Dim.ColorFill, 
                 struc.Dim.Material
             );
@@ -32,14 +32,14 @@ namespace CLGenerator.MD.MdStructure
     }
 
 
-    public class VerticalWall : IWall
+    public class MdVerticalWall : IMdWall
     {
         MdDimension _dim;
-        public VerticalWall(IBaseStructure struc)
+        public MdVerticalWall(IMdBaseCabinet struc)
         {
             _dim = new MdDimension(
                 new MdRectangle(
-                    struc.Dim.Height, 
+                    struc.Dim.Y, 
                     struc.Depth.GetMeasure()
                 ), 
                 _dim.Name + ":wall", 

@@ -86,9 +86,37 @@ namespace CLGenerator.ST
                 _dimensions = _decorator.Implement();
 
             var orderedList = new List<MdDimension>();
-            orderedList = _dimensions.OrderByDescending(r => r.Width).Select(r => r).ToList<MdDimension>();
+            orderedList = _dimensions.OrderByDescending(r => r.X).Select(r => r).ToList<MdDimension>();
             return orderedList;
         }
+    }
+
+    public class DcOrderHeight : IStDimOrder
+    {
+        List<MdDimension> _dimensions;
+        IStDimOrder _decorator;
+
+
+        public DcOrderHeight(List<MdDimension> dim)
+        {
+            _dimensions = dim;
+        }
+
+        public DcOrderHeight(IStDimOrder dec)
+        {
+            _decorator = dec;
+        }
+
+        public List<MdDimension> Implement()
+        {
+            if (_decorator != null)
+                _dimensions = _decorator.Implement();
+
+            var orderedList = new List<MdDimension>();
+            orderedList = _dimensions.OrderByDescending(r => r.Y).Select(r => r).ToList<MdDimension>();
+            return orderedList;
+        }
+
     }
 
 
@@ -115,53 +143,103 @@ namespace CLGenerator.ST
             if (_decorator != null)
                 _dimensions = _decorator.Implement();
 
-            _dimensions = _dimensions.OrderByDescending(r => r.ToBinary()).Select(r => r).ToList<MdDimension>();
             return _dimensions;
         }
     }
 
+
+    public abstract class OrderWithinBounds : IStDimOrder{
+
+        public double Bound { get; private set; }
+        public int Reach { get; private set;  }
+        public List<MdDimension> Dimensions { get; private set; }
+
+        public OrderWithinBounds(List<MdDimension> dims, double bound, int maxReach = 100000){
+            Reach = maxReach;
+            Bound = bound;
+            Dimensions = dims;
+        }
+
+        public abstract List<MdDimension> Implement();
+    }
+
+
+    /// <summary>
+    /// Order dimensions in groups based on the boards width
+    /// </summary>
+    public class DcOrderWithinBoundsX : OrderWithinBounds
+    {
+        public DcOrderWithinBoundsX(List<MdDimension> dim, MdRectangle boardDim, int maxReach = 100000) : base(
+            dim, 
+            boardDim.X,
+            maxReach
+        ){ }
+
+        public DcOrderWithinBoundsX(IStDimOrder dec, MdRectangle boardDim, int maxReach = 100000): base(
+            dec.Implement(), 
+            boardDim.X, 
+            maxReach
+        ){ } 
+
+        public override List<MdDimension> Implement()
+        {
+            var newDims = new List<MdDimension>();
+            for (int i = 0; Dimensions.Count() != 0; i++)
+            {
+                var m = Dimensions[0];
+                var totalWidth = m.X;
+                newDims.Add(m);
+                Dimensions.Remove(m);
+
+                var matchingWidths = Dimensions.Where(r => r.Y == m.Y).Take(Reach).Select(r => r).ToList();
+                foreach (MdDimension dim in matchingWidths)
+                {
+                    if (totalWidth + dim.X < Bound)
+                    {
+                        newDims.Add(dim);
+                        Dimensions.Remove(dim);
+                        totalWidth += dim.X;
+                    }
+                }
+            }
+            return newDims;
+        }
+    }
+ 
+
     /// <summary>
     /// Order dimensions in groups based on the boards height
     /// </summary>
-    public class DcOrderWithinBoundsY : IStDimOrder
+    public class DcOrderWithinBoundsY : OrderWithinBounds
     {
-        double _yBound;
-        int _reach;
-        List<MdDimension> _dimensions;
-        IStDimOrder _decorator; 
+        public DcOrderWithinBoundsY(List<MdDimension> dim, MdRectangle boardDim, int maxReach = 100000) : base(
+            dim, 
+            boardDim.Y,
+            maxReach
+        ){}
 
-        public DcOrderWithinBoundsY(List<MdDimension> dim, MdDimension boardDim, int maxReach = 100000){
-            _yBound = boardDim.Height;
-            _dimensions = dim;
-            _reach = maxReach;
-        }
+        public DcOrderWithinBoundsY(IStDimOrder dec, MdRectangle boardDim, int maxReach = 100000): base(
+            dec.Implement(), 
+            boardDim.Y, 
+            maxReach
+        ){}
 
-        public DcOrderWithinBoundsY(IStDimOrder dec, MdDimension boardDim, int maxReach = 100000){
-            _decorator = dec;
-            _yBound = boardDim.Height;
-            _reach = maxReach;
-        }
-
-        public List<MdDimension> Implement()
+        public override List<MdDimension> Implement()
         {
-            if(_decorator != null){
-                _dimensions = _decorator.Implement();
-            }
-
             var newDims = new List<MdDimension>();
-            for (int i = 0; _dimensions.Count() != 0; i++){
+            for (int i = 0; Dimensions.Count() != 0; i++){
                 
-                var m = _dimensions[0];
-                var totalHeight = m.Height;
+                var m = Dimensions[0];
+                var totalHeight = m.Y;
                 newDims.Add(m);
-                _dimensions.Remove(m);
+                Dimensions.Remove(m);
 
-                var matchingWidths = _dimensions.Where(r => r.Width == m.Width).Take(_reach).Select(r => r).ToList();
+                var matchingWidths = Dimensions.Where(r => r.X == m.X).Take(Reach).Select(r => r).ToList();
                 foreach(MdDimension dim in matchingWidths){
-                    if(totalHeight + dim.Height < _yBound){
+                    if(totalHeight + dim.Y < Bound){
                         newDims.Add(dim);
-                        _dimensions.Remove(dim);
-                        totalHeight += dim.Height;
+                        Dimensions.Remove(dim);
+                        totalHeight += dim.Y;
                     } 
                 }
             }

@@ -40,7 +40,7 @@ namespace CLGenerator.ST
 
             if (!restricted)
             {
-                var tempDim = new MdDimension(new MdRectangle(dim.Width + _kerfAllowance, dim.Height + _kerfAllowance), dim);
+                var tempDim = new MdDimension(new MdRectangle(dim.X + _kerfAllowance, dim.Y + _kerfAllowance), dim);
                 if (board.WithinBounds(tempDim, _selectedEdge))
                     return false;
             }

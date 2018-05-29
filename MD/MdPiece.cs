@@ -38,10 +38,10 @@ namespace CLGenerator.MD
         public bool Collides(MdDimension pDimension, MdPoint pStartPoint)
         {
             if (
-                this._start.X < pStartPoint.X + pDimension.Width &&
-                this._start.X + this._dim.Width > pStartPoint.X &&
-                this. _start.Y < pStartPoint.Y + pDimension.Height &&
-                this._dim.Height + this._start.Y > pStartPoint.Y 
+                this._start.X < pStartPoint.X + pDimension.X &&
+                this._start.X + this._dim.X > pStartPoint.X &&
+                this. _start.Y < pStartPoint.Y + pDimension.Y &&
+                this._dim.Y + this._start.Y > pStartPoint.Y 
             ){
                 return true;
             }
@@ -61,7 +61,6 @@ namespace CLGenerator.MD
                 new MdVertLine(Coordinates.Corners[3], Coordinates.Corners[2])
             };
             return list;
-
         }
 
         /// <summary>
@@ -78,26 +77,19 @@ namespace CLGenerator.MD
             var pProporitons = _pdfShapeWriter.Proportions(_start, _dim, Constants.PdfZoom);
             cb = _pdfShapeWriter.DrawRectangle(cb, pProporitons, _dim.ColorFill[1]);
 
-            double x = pProporitons[0];
-            double y = pProporitons[1];
-            double height = pProporitons[2];
-            double width = pProporitons[3];
-            double centerX = x + (width / 2);
-            double centerY = y + (height / 2);
-           
-            //get center coordinates within rectangle
-            float textX = (float)centerX - (float)(StaticHelpers.GetTextCenterPoint(_dim.Name, 0));
-            //account for height of text by subtracting
-            float textY = (float)centerY - 3;
-
-
             // draw text
             cb.BeginText();
             cb.SetColorFill(_dim.ColorFill[0]);
-            cb.SetFontAndSize(BaseFont.CreateFont(BaseFont.HELVETICA, BaseFont.WINANSI, false), 7);
-            cb.ShowTextAligned(Element.ALIGN_CENTER, _dim.Name, textX, textY, 0f);
+
+            StaticHelpers.SetTextWithinCoordinates(this, this.ToString(), cb);
+
             cb.EndText();
             return cb;
+        }
+
+        public override string ToString()
+        {
+            return _dim.Name + "\n \n" + _dim.ToString();
         }
     }
 }

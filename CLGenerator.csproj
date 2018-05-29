@@ -42,7 +42,6 @@
     <Compile Include="MD\MdPoint.cs" />
     <Compile Include="MD\MdBoard.cs" />
     <Compile Include="BD\IBuilder.cs" />
-    <Compile Include="BD\Operator.cs" />
     <Compile Include="MD\MdList.cs" />
     <Compile Include="ST\IStDimOrder.cs" />
     <Compile Include="ST\IStrategy.cs" />
@@ -62,12 +61,24 @@
     <Compile Include="MD\MdDimList.cs" />
     <Compile Include="MD\MdDimension.cs" />
     <Compile Include="FC\CaseFactory.cs" />
-    <Compile Include="MD\Structure\IBaseStructure.cs" />
-    <Compile Include="MD\Structure\IPlane.cs" />
+    <Compile Include="MD\Structure\IMdBaseCabinet.cs" />
+    <Compile Include="MD\Structure\IMdWall.cs" />
     <Compile Include="MD\Measure\IMeasure.cs" />
     <Compile Include="MD\Material\IMaterial.cs" />
     <Compile Include="MD\MdRectangle.cs" />
-    <Compile Include="MD\Structure\StructureCopier.cs" />
+    <Compile Include="MD\Structure\MdStructureCopier.cs" />
+    <Compile Include="FC\CutDirectionPreferenceFactory.cs" />
+    <Compile Include="Operator.cs" />
+    <Compile Include="ST\IStBoardOrder.cs" />
+    <Compile Include="ST\IDcDimAllowence.cs" />
+    <Compile Include="MD\Structure\IMdCase.cs" />
+    <Compile Include="MD\Structure\IMdCabTop.cs" />
+    <Compile Include="MD\Structure\MdDrawerbox.cs" />
+    <Compile Include="MD\Structure\MdCase.cs" />
+    <Compile Include="MD\Structure\MdShelfCase.cs" />
+    <Compile Include="MD\Structure\IMdDoorAccessory.cs" />
+    <Compile Include="MD\MdCutListSettings.cs" />
+    <Compile Include="MD\Structure\IMdCabinetAccessory.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="MD\" />
